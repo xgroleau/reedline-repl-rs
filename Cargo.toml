@@ -1,7 +1,10 @@
 [package]
 name = "reedline-repl-rs"
 version = "1.0.2"
-authors = ["Artur Hallmann <arturh@arturh.de>", "Jack Lund <jackl@geekheads.net>"]
+authors = [
+    "Artur Hallmann <arturh@arturh.de>",
+    "Jack Lund <jackl@geekheads.net>",
+]
 description = "Library to generate a fancy REPL for your application based on reedline and clap"
 license = "MIT"
 repository = "https://github.com/arturh85/reedline-repl-rs"
@@ -14,15 +17,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-reedline = "0.6.0"
-nu-ansi-term = { version = "0.45.1" }
-crossterm = { version = "0.23.2" }
+reedline = "0.13.0"
+nu-ansi-term = { version = "0.46.0" }
+crossterm = { version = "0.25.0" }
 yansi = "0.5.1"
 regex = "1"
-clap = "3"
+clap = "4"
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] } # only for async example
+tokio = { version = "1", features = [
+    "macros",
+    "rt-multi-thread",
+] } # only for async example
 
 [target.'cfg(windows)'.dependencies]
 winapi-util = "0.1.5"

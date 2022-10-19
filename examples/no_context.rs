@@ -4,15 +4,18 @@ use reedline_repl_rs::{Repl, Result};
 
 /// Add two numbers. Have to make this generic to be able to pass a Context of type ()
 fn add<T>(args: ArgMatches, _context: &mut T) -> Result<Option<String>> {
-    let first: i32 = args.value_of("first").unwrap().parse()?;
-    let second: i32 = args.value_of("second").unwrap().parse()?;
+    let first: i32 = args.get_one::<String>("first").unwrap().parse()?;
+    let second: i32 = args.get_one::<String>("second").unwrap().parse()?;
 
     Ok(Some((first + second).to_string()))
 }
 
 /// Write "Hello"
 fn hello<T>(args: ArgMatches, _context: &mut T) -> Result<Option<String>> {
-    Ok(Some(format!("Hello, {}", args.value_of("who").unwrap())))
+    Ok(Some(format!(
+        "Hello, {}",
+        args.get_one::<String>("who").unwrap()
+    )))
 }
 
 fn main() -> Result<()> {

@@ -4,7 +4,10 @@ use reedline_repl_rs::{initialize_repl, Repl, Result};
 
 /// Write "Hello" with given name
 fn hello<T>(args: ArgMatches, _context: &mut T) -> Result<Option<String>> {
-    Ok(Some(format!("Hello, {}", args.value_of("who").unwrap())))
+    Ok(Some(format!(
+        "Hello, {}",
+        args.get_one::<String>("who").unwrap()
+    )))
 }
 
 fn main() -> Result<()> {

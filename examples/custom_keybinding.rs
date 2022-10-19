@@ -1,12 +1,15 @@
 //! Example with custom Keybinding
-use crossterm::event::{KeyCode, KeyModifiers};
 use reedline::{EditCommand, ReedlineEvent};
+use reedline::{KeyCode, KeyModifiers};
 use reedline_repl_rs::clap::{Arg, ArgMatches, Command};
 use reedline_repl_rs::{Repl, Result};
 
 /// Write "Hello" with given name
 fn hello<T>(args: ArgMatches, _context: &mut T) -> Result<Option<String>> {
-    Ok(Some(format!("Hello, {}", args.value_of("who").unwrap())))
+    Ok(Some(format!(
+        "Hello, {}",
+        args.get_one::<String>("who").unwrap()
+    )))
 }
 
 fn main() -> Result<()> {

@@ -21,12 +21,16 @@ Features:
 Basic example code:
 
 ```rust
+//! Minimal example
 use reedline_repl_rs::clap::{Arg, ArgMatches, Command};
 use reedline_repl_rs::{Repl, Result};
 
 /// Write "Hello" with given name
 fn hello<T>(args: ArgMatches, _context: &mut T) -> Result<Option<String>> {
-    Ok(Some(format!("Hello, {}", args.value_of("who").unwrap())))
+    Ok(Some(format!(
+        "Hello, {}",
+        args.get_one::<String>("who").unwrap()
+    )))
 }
 
 fn main() -> Result<()> {
@@ -39,7 +43,7 @@ fn main() -> Result<()> {
             Command::new("hello")
                 .arg(Arg::new("who").required(true))
                 .about("Greetings!"),
-            hello
+            hello,
         );
     repl.run()
 }
@@ -73,6 +77,14 @@ MyApp〉hello Friend
 Hello, Friend
 MyApp〉
 ```
+
+## Testing
+
+``` shell
+cargo test --features async
+```
+
+Will run the doc tests (compiling the examples). Notice, the `examples/async.rs` requires the `async` feature.
 
 ## Thanks
 

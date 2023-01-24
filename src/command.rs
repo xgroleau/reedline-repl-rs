@@ -8,7 +8,7 @@ use std::fmt;
 
 pub(crate) struct ReplCommand<Context, E> {
     pub(crate) name: String,
-    pub(crate) command: Command<'static>,
+    pub(crate) command: Command,
     pub(crate) callback: Option<Callback<Context, E>>,
     #[cfg(feature = "async")]
     pub(crate) async_callback: Option<AsyncCallback<Context, E>>,
@@ -28,7 +28,7 @@ impl<Context, E> PartialEq for ReplCommand<Context, E> {
 
 impl<Context, E> ReplCommand<Context, E> {
     /// Create a new command with the given name and callback function
-    pub fn new(name: &str, command: Command<'static>, callback: Callback<Context, E>) -> Self {
+    pub fn new(name: &str, command: Command, callback: Callback<Context, E>) -> Self {
         Self {
             name: name.to_string(),
             command,
@@ -40,11 +40,7 @@ impl<Context, E> ReplCommand<Context, E> {
 
     /// Create a new async command with the given name and callback function
     #[cfg(feature = "async")]
-    pub fn new_async(
-        name: &str,
-        command: Command<'static>,
-        callback: AsyncCallback<Context, E>,
-    ) -> Self {
+    pub fn new_async(name: &str, command: Command, callback: AsyncCallback<Context, E>) -> Self {
         Self {
             name: name.to_string(),
             command,

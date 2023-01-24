@@ -6,12 +6,12 @@ use crate::{paint_green_bold, paint_yellow_bold, AfterCommandCallback, Callback}
 #[cfg(feature = "async")]
 use crate::{AsyncAfterCommandCallback, AsyncCallback};
 use clap::Command;
-use crossterm::event::{KeyCode, KeyModifiers};
+// use crossterm::event::{KeyCode, KeyModifiers};
 use nu_ansi_term::{Color, Style};
 use reedline::{
-    default_emacs_keybindings, ColumnarMenu, DefaultHinter, DefaultValidator, Emacs,
-    ExampleHighlighter, FileBackedHistory, Keybindings, Reedline, ReedlineEvent, ReedlineMenu,
-    Signal,
+    self, default_emacs_keybindings, ColumnarMenu, DefaultHinter, DefaultValidator, Emacs,
+    ExampleHighlighter, FileBackedHistory, KeyCode, KeyModifiers, Keybindings, Reedline,
+    ReedlineEvent, ReedlineMenu, Signal,
 };
 use std::boxed::Box;
 use std::collections::HashMap;
@@ -261,11 +261,7 @@ where
     }
 
     /// Add a command to your REPL
-    pub fn with_command(
-        mut self,
-        command: Command<'static>,
-        callback: Callback<Context, E>,
-    ) -> Self {
+    pub fn with_command(mut self, command: Command, callback: Callback<Context, E>) -> Self {
         let name = command.get_name().to_string();
         self.commands
             .insert(name.clone(), ReplCommand::new(&name, command, callback));
@@ -276,7 +272,7 @@ where
     #[cfg(feature = "async")]
     pub fn with_command_async(
         mut self,
-        command: Command<'static>,
+        command: Command,
         callback: AsyncCallback<Context, E>,
     ) -> Self {
         let name = command.get_name().to_string();

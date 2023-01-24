@@ -1,10 +1,11 @@
 use crate::command::ReplCommand;
+use clap::builder::StyledStr;
 use clap::Command;
 use reedline::{Completer, Span, Suggestion};
 use std::collections::HashMap;
 
 pub(crate) struct ReplCompleter {
-    commands: HashMap<String, Command<'static>>,
+    commands: HashMap<String, Command>,
 }
 
 impl Completer for ReplCompleter {
@@ -40,10 +41,10 @@ impl ReplCompleter {
         ReplCompleter { commands }
     }
 
-    fn build_suggestion(&self, value: &str, help: Option<&str>, span: Span) -> Suggestion {
+    fn build_suggestion(&self, value: &str, help: Option<&StyledStr>, span: Span) -> Suggestion {
         Suggestion {
             value: value.to_string(),
-            description: help.map(|n| n.to_string()),
+            description: help.map(|n| format!("{}", n)),
             extra: None,
             span,
             append_whitespace: true,
@@ -52,7 +53,7 @@ impl ReplCompleter {
 
     fn parameter_values_starting_with(
         &self,
-        command: &Command<'static>,
+        command: &Command,
         _parameter_idx: usize,
         search: &str,
         span: Span,
@@ -63,16 +64,13 @@ impl ReplCompleter {
             if arg.is_global_set() {
                 continue;
             }
-            if let Some(possible_values) = arg.get_possible_values() {
-                completions.extend(
-                    possible_values
-                        .iter()
-                        .filter(|value| value.get_name().starts_with(search))
-                        .map(|value| {
-                            self.build_suggestion(value.get_name(), value.get_help(), span)
-                        }),
-                );
-            }
+
+            completions.extend(
+                arg.get_possible_values()
+                    .iter()
+                    .filter(|value| value.get_name().starts_with(search))
+                    .map(|value| self.build_suggestion(value.get_name(), value.get_help(), span)),
+            );
 
             if let Some(long) = arg.get_long() {
                 let value = "--".to_string() + long;
@@ -102,7 +100,8 @@ impl ReplCompleter {
             .collect();
 
         if "help".starts_with(search) {
-            result.push(self.build_suggestion("help", Some("show help"), span));
+            let help: StyledStr = "show help".into();
+            result.push(self.build_suggestion("help", Some(&help), span));
         }
 
         result

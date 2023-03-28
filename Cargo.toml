@@ -36,6 +36,7 @@ winapi-util = "0.1.5"
 [features]
 default = []
 async = []
+scripts = []
 macro = ["clap/cargo"]
 
 [[example]]

@@ -508,6 +508,23 @@ where
         Ok(line_editor)
     }
 
+    #[cfg(feature = "scripts")]
+    /// Executs REPL taking an object with a `std::io::BufRead` implementation
+    /// as input
+    /// This is useful for executing scripts. Exampel structure that can be used here
+    /// is `std::io::BufReader` built on `std::fs::File`
+    pub fn run_with_reader(&mut self, reader: impl std::io::BufRead) -> Result<()> {
+        let lines = reader.lines();
+        for line in lines {
+            let line = line.expect("failed to read line");
+            if let Err(err) = self.process_line(line) {
+                (self.error_handler)(err, self)?;
+            }
+        }
+
+        Ok(())
+    }
+
     /// Execute REPL
     pub fn run(&mut self) -> Result<()> {
         enable_virtual_terminal_processing();

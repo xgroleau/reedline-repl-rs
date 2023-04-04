@@ -12,10 +12,29 @@ impl Completer for ReplCompleter {
     fn complete(&mut self, line: &str, pos: usize) -> Vec<Suggestion> {
         let mut completions = vec![];
         completions.extend(if line.contains(' ') {
-            let mut words = line[0..pos].split(' ');
-            let first_word = words.next().unwrap();
-            let mut words_rev = words.rev();
-            if let Some(command) = self.commands.get(first_word) {
+            let words: Vec<&str> = line[0..pos].split(' ').collect();
+
+            // Find the "deepest" subcommand in the line
+            let mut deepest_command: Option<&Command> = None;
+            let mut deepest_command_idx = 0;
+            for (i, word) in words.iter().enumerate() {
+                // If we've found a command already, use it to to find subcommands
+                if let Some(nearest) = deepest_command {
+                    if let Some(subcommand) = nearest.find_subcommand(word) {
+                        deepest_command = Some(subcommand);
+                        deepest_command_idx = i;
+                    }
+                } else {
+                    // If no command is found, look for a top-level one
+                    deepest_command = self.commands.get(*word);
+                    deepest_command_idx = i;
+                }
+            }
+
+            let words_left = &words[deepest_command_idx..];
+            let mut words_rev = words_left.iter().rev();
+
+            if let Some(command) = deepest_command {
                 let last_word = words_rev.next().unwrap();
                 let last_word_start_pos = line.len() - last_word.len();
                 let span = Span::new(last_word_start_pos, pos);
@@ -86,6 +105,17 @@ impl ReplCompleter {
                 }
             }
         }
+
+        for subcommand in command.get_subcommands() {
+            if subcommand.get_name().starts_with(search) {
+                completions.push(self.build_suggestion(
+                    subcommand.get_name(),
+                    subcommand.get_after_help(),
+                    span,
+                ));
+            }
+        }
+
         completions
     }
 

@@ -1,6 +1,6 @@
 [package]
 name = "reedline-repl-rs"
-version = "1.0.4"
+version = "1.0.5"
 authors = [
     "Artur Hallmann <arturh@arturh.de>",
     "Jack Lund <jackl@geekheads.net>",

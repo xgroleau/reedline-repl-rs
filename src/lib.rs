@@ -46,7 +46,7 @@
 #![doc = include_str!("../examples/async.rs")]
 //! ```
 //! A few things to note:
-//! - The ugly Pin::Box workaround is required because of unstable rust async Fn's  
+//! - The ugly Pin::Box workaround is required because of unstable rust async Fn's
 //!
 //! # Keybindings
 //!
@@ -55,7 +55,7 @@
 #![doc = include_str!("../examples/custom_keybinding.rs")]
 //! ```
 //! A few things to note:
-//! - The ugly Pin::Box workaround is required because of unstable rust async Fn's  
+//! - The ugly Pin::Box workaround is required because of unstable rust async Fn's
 //!
 //! # Help
 //! reedline-repl-rs automatically builds help commands for your REPL using clap [print_help](https://docs.rs/clap/latest/clap/struct.App.html#method.print_help):
@@ -141,12 +141,12 @@ pub type AsyncAfterCommandCallback<Context, Error> =
 
 /// Utility to format prompt strings as green and bold. Use yansi directly instead for custom colors.
 pub fn paint_green_bold(input: &str) -> String {
-    Box::new(Paint::green(input).bold()).to_string()
+    Paint::green(input).bold().to_string()
 }
 
 /// Utility to format prompt strings as yellow and bold. Use yansi directly instead for custom colors.
 pub fn paint_yellow_bold(input: &str) -> String {
-    Box::new(Paint::yellow(input).bold()).to_string()
+    Paint::yellow(input).bold().to_string()
 }
 
 /// Initialize the name, version and description of the Repl from your

@@ -10,8 +10,8 @@ use clap::Command;
 use nu_ansi_term::{Color, Style};
 use reedline::{
     self, default_emacs_keybindings, ColumnarMenu, DefaultHinter, DefaultValidator, Emacs,
-    ExampleHighlighter, FileBackedHistory, KeyCode, KeyModifiers, Keybindings, Reedline,
-    ReedlineEvent, ReedlineMenu, Signal,
+    ExampleHighlighter, ExternalPrinter, FileBackedHistory, KeyCode, KeyModifiers, Keybindings,
+    Reedline, ReedlineEvent, ReedlineMenu, Signal,
 };
 use std::boxed::Box;
 use std::collections::HashMap;
@@ -40,6 +40,7 @@ pub struct Repl<Context, E: Display> {
     history_capacity: Option<usize>,
     context: Context,
     keybindings: Keybindings,
+    external_printer: ExternalPrinter<String>,
     hinter_style: Style,
     hinter_enabled: bool,
     quick_completions: bool,
@@ -83,6 +84,7 @@ where
             prompt,
             context,
             keybindings,
+            external_printer: ExternalPrinter::new(2048),
             stop_on_ctrl_c: false,
             stop_on_ctrl_d: true,
             error_handler: default_error_handler,
@@ -258,6 +260,10 @@ where
         self.keybindings.remove_binding(modifier, key_code);
 
         self
+    }
+
+    pub fn external_printer(&self) -> ExternalPrinter<String> {
+        self.external_printer.clone()
     }
 
     /// Add a command to your REPL
@@ -490,7 +496,8 @@ where
             .with_highlighter(Box::new(ExampleHighlighter::new(valid_commands.clone())))
             .with_validator(validator)
             .with_partial_completions(self.partial_completions)
-            .with_quick_completions(self.quick_completions);
+            .with_quick_completions(self.quick_completions)
+            .with_external_printer(self.external_printer.clone());
 
         if self.hinter_enabled {
             line_editor = line_editor.with_hinter(Box::new(

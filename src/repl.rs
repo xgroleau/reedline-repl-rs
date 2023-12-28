@@ -262,6 +262,21 @@ where
         self
     }
 
+    /// Access the external printer to print messages on the console
+    ///
+    /// The external printer can be used to print messages on the console without a command running.
+    ///
+    /// Example:
+    ///
+    /// ```rust,no_run
+    /// use reedline_repl_rs::{Repl, Error};
+    /// let mut repl: Repl<(), Error> = Repl::new(());
+    /// let printer = repl.external_printer();
+    /// std::thread::spawn(move || {
+    ///     printer.print("hello world".to_owned()).expect("failed to print");
+    /// });
+    /// repl.run().expect("failed to run");
+    /// ```
     pub fn external_printer(&self) -> ExternalPrinter<String> {
         self.external_printer.clone()
     }

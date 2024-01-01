@@ -268,6 +268,37 @@ where
         self
     }
 
+    /// Add a command to your REPL using clap's derive parser
+    #[cfg(feature = "derive")]
+    pub fn with_derived<Clap: clap::Parser>(
+        mut self,
+        callbacks: crate::CallBackMap<Context, E>,
+    ) -> Self {
+        let derived = Clap::command();
+
+        self = self.with_name(derived.get_name());
+
+        if let Some(version) = derived.get_version() {
+            self = self.with_version(version);
+        }
+
+        if let Some(desc) = derived.get_about() {
+            self = self.with_description(&desc.to_string());
+        }
+
+        let commands = derived.get_subcommands();
+
+        for command in commands {
+            let name = command.get_name();
+            let cmd: ReplCommand<Context, E> =
+                ReplCommand::new(name, command.clone(), callbacks[name]);
+
+            self.commands.insert(name.to_string(), cmd);
+        }
+
+        self
+    }
+
     /// Add a command to your REPL
     #[cfg(feature = "async")]
     pub fn with_command_async(

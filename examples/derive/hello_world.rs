@@ -7,13 +7,7 @@ use reedline_repl_rs::{CallBackMap, Repl, Result};
 
 #[derive(Parser, Debug)]
 #[command(name = "MyApp", version = "v0.1.0", about = "My very cool app")]
-pub struct MyApp {
-    #[command(subcommand)]
-    pub command: Commands,
-}
-
-#[derive(Debug, Subcommand)]
-pub enum Commands {
+pub enum MyApp {
     /// Greeting
     Hello { who: String },
 }

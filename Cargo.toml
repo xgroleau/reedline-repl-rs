@@ -59,6 +59,11 @@ path = "examples/derive/no_context.rs"
 required-features = ["derive"]
 
 [[example]]
+name = "derive_subcommands"
+path = "examples/derive/subcommands.rs"
+required-features = ["derive"]
+
+[[example]]
 name = "derive_with_context"
 path = "examples/derive/with_context.rs"
 required-features = ["derive"]

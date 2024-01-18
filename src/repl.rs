@@ -290,8 +290,10 @@ where
 
         for command in commands {
             let name = command.get_name();
-            let cmd: ReplCommand<Context, E> =
-                ReplCommand::new(name, command.clone(), callbacks[name]);
+            let Some(callback) = callbacks.get(name) else {
+                continue;
+            };
+            let cmd: ReplCommand<Context, E> = ReplCommand::new(name, command.clone(), *callback);
 
             self.commands.insert(name.to_string(), cmd);
         }

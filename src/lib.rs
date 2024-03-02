@@ -120,6 +120,7 @@ use yansi::Paint;
 pub type Callback<Context, Error> =
     fn(ArgMatches, &mut Context) -> std::result::Result<Option<String>, Error>;
 
+#[allow(dead_code)]
 type CommandName = String;
 
 #[cfg(feature = "derive")]

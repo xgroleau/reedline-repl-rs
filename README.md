@@ -8,6 +8,7 @@ Library to help you create a fancy [REPL](https://en.wikipedia.org/wiki/Read%E2%
 
 Features:
 - Popular [clap](https://github.com/clap-rs/clap) crate [Command](https://docs.rs/clap/latest/clap/type.Command.html) used as configuration interface
+- Also supports [clap-derive](https://docs.rs/clap/latest/clap/_derive/) based configuration with feature flag, see [derive examples](https://github.com/arturh85/reedline-repl-rs/tree/main/examples/derive)
 - General editing functionality, that should feel familiar coming from other shells (e.g. bash, fish, zsh).
 - Interactive tab-completion with graphical selection menu 
 - Fish-style history autosuggestion hints

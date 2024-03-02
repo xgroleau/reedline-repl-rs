@@ -120,6 +120,12 @@ use yansi::Paint;
 pub type Callback<Context, Error> =
     fn(ArgMatches, &mut Context) -> std::result::Result<Option<String>, Error>;
 
+type CommandName = String;
+
+#[cfg(feature = "derive")]
+pub type CallBackMap<Context, Error> =
+    std::collections::HashMap<CommandName, Callback<Context, Error>>;
+
 /// Async Command callback function signature
 #[cfg(feature = "async")]
 pub type AsyncCallback<Context, Error> =

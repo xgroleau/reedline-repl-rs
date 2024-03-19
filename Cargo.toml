@@ -23,6 +23,7 @@ crossterm = { version = "0.27.0" }
 yansi = "1.0.1"
 regex = "1"
 clap = "4"
+futures = { version = "0.3", optional = true }
 
 [dev-dependencies]
 tokio = { version = "1", features = [
@@ -35,7 +36,7 @@ winapi-util = "0.1.6"
 
 [features]
 default = []
-async = []
+async = ["dep:futures"]
 scripts = []
 macro = ["clap/cargo"]
 derive = ["clap/derive"]
@@ -67,3 +68,4 @@ required-features = ["derive"]
 name = "derive_with_context"
 path = "examples/derive/with_context.rs"
 required-features = ["derive"]
+

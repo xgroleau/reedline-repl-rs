@@ -648,6 +648,24 @@ where
         disable_virtual_terminal_processing();
         Ok(())
     }
+
+    #[cfg(all(feature = "async", feature = "scripts"))]
+    /// Executs REPL taking an object with a `futures::io::AsyncBufRead` implementation
+    /// as input
+    /// This is useful for executing scripts. Exampel structure that can be used here
+    /// is `futures::io::AsyncBufRead` 
+    pub async fn run_with_async_reader(&mut self, reader: impl futures::io::AsyncBufRead + std::marker::Unpin) -> Result<()> {
+        use futures::AsyncBufReadExt;
+        use futures::stream::StreamExt;
+        let mut lines = reader.lines();
+        while let Some(line) = lines.next().await {
+            let line = line.expect("failed to read line");
+            if let Err(err) = self.process_line_async(line).await {
+                (self.error_handler)(err, self)?;
+            }
+        }
+        Ok(())
+    }
 }
 
 #[cfg(windows)]
